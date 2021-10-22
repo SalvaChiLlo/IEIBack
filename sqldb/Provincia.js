@@ -3,32 +3,33 @@ const {
   Model,
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class CategoriaProducto extends Model {
+  class Provincia extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // CategoriaProducto.belongsToMany(models.Producto, {
-      //   through: models.Categoria
-      // })
-      CategoriaProducto.belongsToMany(models.Cliente, {
-        through: models.Interes
+      Provincia.hasMany(models.Localidad, {
+        onDelete: 'CASCADE',
+        onUpdate: 'CASCADE'
       })
     }
   };
-  CategoriaProducto.init({
-    categoria: {
-      type: DataTypes.STRING,
+  Provincia.init({
+    codigoProvincia: {
+      type: DataTypes.TEXT,
       allowNull: false,
       primaryKey: true,
-      unique: true
+    },
+    nombreProvincia: {
+      type: DataTypes.TEXT,
+      default: ''
     }
   }, {
     sequelize,
-    modelName: 'CategoriaProducto',
+    modelName: 'Provincia',
     freezeTableName: true,
   });
-  return CategoriaProducto;
+  return Provincia;
 };

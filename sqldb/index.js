@@ -8,12 +8,9 @@ const db = {
 };
 
 // // Insert models below
-db.Cliente = require('./Cliente')(db.sequelize, Sequelize.DataTypes);
-db.Interes = require('./Interes')(db.sequelize, Sequelize.DataTypes);
-db.CategoriaProducto = require('./Producto/CategoriaProducto')(db.sequelize, Sequelize.DataTypes);
-db.Categoria = require('./Producto/Categoria')(db.sequelize, Sequelize.DataTypes);
-db.Opinion = require('./Producto/Opinion')(db.sequelize, Sequelize.DataTypes);
-db.Producto = require('./Producto/Producto')(db.sequelize, Sequelize.DataTypes);
+db.Biblioteca = require('./Biblioteca')(db.sequelize, Sequelize.DataTypes);
+db.Localidad = require('./Localidad')(db.sequelize, Sequelize.DataTypes);
+db.Provincia = require('./Provincia')(db.sequelize, Sequelize.DataTypes);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

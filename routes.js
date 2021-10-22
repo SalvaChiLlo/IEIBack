@@ -1,12 +1,12 @@
 // // import Endpoints
-const producto = require('./api/producto');
-const categoria = require('./api/categoria');
-const cliente = require('./api/cliente');
+const biblioteca = require('./api/biblioteca');
+const localidad = require('./api/localidad');
+const provincia = require('./api/provincia');
 
 module.exports = (app) => {
-  app.use('/api/productos', producto);
-  app.use('/api/categorias', categoria);
-  app.use('/api/clientes', cliente);
+  app.use('/api/bibliotecas', biblioteca);
+  app.use('/api/localidades', localidad);
+  app.use('/api/provincias', provincia);
 
   app.get('/', (req, res) => {
     res.status(200).send('<h1>Server is running</h1>');
