@@ -10,8 +10,8 @@ const cat = require(path.join(__dirname, '../IEICAT'));
 const val = require(path.join(__dirname, '../IEICV'));
 
 async function parseData() {
-  fs.writeFileSync(path.join(__dirname, './CAT.json'), JSON.stringify(cat.convertXMLToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.xml')).toString())))
-  fs.writeFileSync(path.join(__dirname, './VAL.json'), JSON.stringify(await val.convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
+  fs.writeFileSync('./CAT.json', JSON.stringify(cat.convertXMLToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.xml')).toString())))
+  fs.writeFileSync('./VAL.json', JSON.stringify(await val.convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
 }
 
 parseData()
