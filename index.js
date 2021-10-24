@@ -2,14 +2,22 @@ const config = require('./config/environment');
 const express = require('express');
 const expressConfig = require('./config/express');
 const http = require('http');
+const fs = require('fs')
 const routeConfig = require('./routes');
 const sqldb = require('./sqldb');
+const cat = require('../IEICAT')
+const val = require('../IEICV')
 
+async function parseData() {
+  fs.writeFileSync('./CAT.json', JSON.stringify(cat.convertXMLToJSON(fs.readFileSync('./biblioteques.xml').toString())))
+  fs.writeFileSync('./VAL.json', JSON.stringify(await val.convertCSVToJSON(fs.readFileSync('./biblioteques.csv').toString())))
+}
+
+parseData()
 
 // Setup server
 const app = express();
 const server = http.createServer(app);
-
 expressConfig(app);
 routeConfig(app);
 
