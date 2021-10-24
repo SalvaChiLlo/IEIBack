@@ -1,8 +1,8 @@
 'use strict';
 
 const { Router } = require('express');
-
-const Biblioteca = require('./biblioteca.controller');
+const path = require('path');
+const Biblioteca = require(path.join(__dirname, './biblioteca.controller'));
 
 const router = new Router();
 

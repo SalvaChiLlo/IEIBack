@@ -3,14 +3,15 @@ const express = require('express');
 const expressConfig = require('./config/express');
 const http = require('http');
 const fs = require('fs')
-const routeConfig = require('./routes');
-const sqldb = require('./sqldb');
-const cat = require('../IEICAT')
-const val = require('../IEICV')
+const path = require('path');
+const routeConfig = require(path.join(__dirname, './routes'));
+const sqldb = require(path.join(__dirname, './sqldb'));
+const cat = require(path.join(__dirname, '../IEICAT'));
+const val = require(path.join(__dirname, '../IEICV'));
 
 async function parseData() {
-  fs.writeFileSync('./CAT.json', JSON.stringify(cat.convertXMLToJSON(fs.readFileSync('./biblioteques.xml').toString())))
-  fs.writeFileSync('./VAL.json', JSON.stringify(await val.convertCSVToJSON(fs.readFileSync('./biblioteques.csv').toString())))
+  fs.writeFileSync(path.join(__dirname, './CAT.json'), JSON.stringify(cat.convertXMLToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.xml')).toString())))
+  fs.writeFileSync(path.join(__dirname, './VAL.json'), JSON.stringify(await val.convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
 }
 
 parseData()
@@ -27,7 +28,7 @@ function startServer() {
   });
 }
 
-sqldb.sequelize.sync({ force: true })
+sqldb.sequelize.sync()
   .then(startServer)
   .catch((err) => {
     console.error(`Server failed to start due to error: ${err}`);

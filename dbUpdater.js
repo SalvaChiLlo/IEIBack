@@ -1,4 +1,5 @@
-const sqldb = require('./sqldb');
+const path = require('path');
+const sqldb = require(path.join(__dirname, './sqldb'));
 
 sqldb.sequelize.sync({ force: true })
   .catch((err) => {

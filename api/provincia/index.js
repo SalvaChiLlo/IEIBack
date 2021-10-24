@@ -1,8 +1,8 @@
 'use strict';
 
 const { Router } = require('express');
-
-const Provincia = require('./provincia.controller');
+const path = require('path')
+const Provincia = require(path.join(__dirname, './provincia.controller'));
 
 const router = new Router();
 

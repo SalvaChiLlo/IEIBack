@@ -1,9 +1,9 @@
 'use strict';
-
-const { Provincia } = require('../../sqldb');
-const config = require('../../config/environment');
+const path = require('path')
+const { Provincia } = require(path.join(__dirname, '../../sqldb'));
+const config = require(path.join(__dirname, '../../config/environment'));
 const jwt = require('jsonwebtoken');
-const db = require('../../sqldb')
+const db = require(path.join(__dirname, '../../sqldb'));
 
 function validationError(res, statusCode) {
   statusCode = statusCode || 422;

@@ -1,8 +1,8 @@
 'use strict';
 
 const { Router } = require('express');
-
-const Localidad = require('./localidad.controller');
+const path = require('path')
+const Localidad = require(path.join(__dirname, './localidad.controller'));
 
 const router = new Router();
 
