@@ -1,10 +1,9 @@
 'use strict';
 
-const { Router } = require('express');
-const path = require('path')
-const Provincia = require(path.join(__dirname, './provincia.controller'));
+import { Router } from 'express';
+import * as Provincia from './provincia.controller'
 
-const router = new Router();
+const router = Router();
 
 router.get('/', Provincia.index);
 router.post('/', Provincia.create);

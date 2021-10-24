@@ -1,10 +1,10 @@
 'use strict';
 
-const { Router } = require('express');
-const path = require('path')
-const Localidad = require(path.join(__dirname, './localidad.controller'));
+import { Router } from 'express';
+import * as Localidad from './localidad.controller';
 
-const router = new Router();
+
+const router = Router();
 
 router.get('/', Localidad.index);
 router.post('/', Localidad.create);

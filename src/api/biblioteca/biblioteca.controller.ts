@@ -1,31 +1,26 @@
+import { BibliotecaModel } from './../models/biblioteca.models';
 'use strict';
+
+import { NextFunction, Request, Response } from "express";
+
 const path = require('path');
 const { Biblioteca } = require(path.join(__dirname, '../../sqldb'));
-const config = require(path.join(__dirname, '../../config/environment'));
-const jwt = require('jsonwebtoken');
 const db = require(path.join(__dirname, '../../sqldb'))
 
-function validationError(res, statusCode) {
+export function validationError(res: Response, statusCode: any) {
   statusCode = statusCode || 422;
-  return (err) => {
+  return (err: any) => {
     return res.status(statusCode).json(err);
   };
 }
 
-function handleError(res, statusCode) {
-  statusCode = statusCode || 500;
-  return (err) => {
-    return res.status(statusCode).send(err);
-  };
-}
-
-function handleCatch(error) {
+export function handleCatch(error: any) {
   console.log('--------------------------------------------------------------------------')
   console.error(error)
   process.exit(1)
 }
 
-async function index(req, res) {
+export async function index(req: Request, res: Response) {
   try {
     console.log(req.query, 'PARAMS')
     const query = req.query;
@@ -57,7 +52,7 @@ async function index(req, res) {
       })
 
       bibliotecas = bibliotecas
-        .filter(biblioteca => biblioteca.Localidad.Provincium.codigoProvincia === query.codigoProvincia)
+        .filter((biblioteca: BibliotecaModel) => biblioteca.Localidad?.Provincium.codigoProvincia === query.codigoProvincia)
     } else {
       bibliotecas = await Biblioteca.findAll({
         include: [
@@ -80,10 +75,10 @@ async function index(req, res) {
 /**
  * Creates a new product
  */
-function create(req, res) {
+export function create(req: Request, res: Response) {
   const newBibl = Biblioteca.build(req.body);
   return newBibl.save()
-    .then((biblioteca) => {
+    .then((biblioteca: BibliotecaModel) => {
       Biblioteca.findAll({
         where: { id: biblioteca.id },
         include: [
@@ -94,17 +89,17 @@ function create(req, res) {
             }
           }
         ]
-      }).then(bibl => {
+      }).then((bibl: any) => {
         res.json(bibl);
       })
     })
-    .catch(validationError(res));
+    .catch((err: Error) => validationError(res, 404));
 }
 
 /**
  * Get a single product
  */
-async function show(req, res, next) {
+export async function show(req: Request, res: Response, next: NextFunction) {
   try {
     const id = req.params.id;
     const bibliotecas = await Biblioteca.findAll({
@@ -130,7 +125,7 @@ async function show(req, res, next) {
  * Deletes a user
  * restriction: 'admin'
  */
-async function destroy(req, res) {
+export async function destroy(req: Request, res: Response) {
   try {
     const id = req.params.id;
     await Biblioteca.destroy({
@@ -147,7 +142,7 @@ async function destroy(req, res) {
 /**
  * Change a users password
  */
-function changePassword(req, res) {
+export function changePassword(req: Request, res: Response) {
   throw Error(`
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
@@ -155,7 +150,7 @@ function changePassword(req, res) {
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
   `);
-  const userId = req.user._id;
+  const userId = req.params.userId;
   const oldPass = String(req.body.oldPassword);
   const newPass = String(req.body.newPassword);
 
@@ -164,24 +159,16 @@ function changePassword(req, res) {
       id: userId,
     },
   })
-    .then(user => {
+    .then((user: any) => {
       if (user.authenticate(oldPass)) {
         user.password = newPass;
         return user.save()
           .then(() => {
             res.status(204).end();
           })
-          .catch(validationError(res));
+          .catch(validationError(res, 404));
       } else {
         return res.status(403).end();
       }
     });
 }
-
-module.exports = {
-  index,
-  show,
-  create,
-  destroy,
-  changePassword,
-};

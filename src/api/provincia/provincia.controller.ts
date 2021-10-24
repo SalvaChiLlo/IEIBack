@@ -1,31 +1,35 @@
 'use strict';
+
+import { NextFunction, Request, Response } from "express";
+import { ProvinciumModel } from "../models/biblioteca.models";
+
 const path = require('path')
 const { Provincia } = require(path.join(__dirname, '../../sqldb'));
 const config = require(path.join(__dirname, '../../config/environment'));
 const jwt = require('jsonwebtoken');
 const db = require(path.join(__dirname, '../../sqldb'));
 
-function validationError(res, statusCode) {
+export function validationError(res: Response, statusCode: number) {
   statusCode = statusCode || 422;
-  return (err) => {
+  return (err: Error) => {
     return res.status(statusCode).json(err);
   };
 }
 
-function handleError(res, statusCode) {
+export function handleError(res: Response, statusCode: number) {
   statusCode = statusCode || 500;
-  return (err) => {
+  return (err: Error) => {
     return res.status(statusCode).send(err);
   };
 }
 
-function handleCatch(error) {
+export function handleCatch(error: Error) {
   console.log('--------------------------------------------------------------------------')
   console.error(error)
   process.exit(1)
 }
 
-async function index(req, res) {
+export async function index(req: Request, res: Response) {
   try {
     let provincias = [];
     provincias = await Provincia.findAll({
@@ -37,7 +41,7 @@ async function index(req, res) {
     })
 
     res.status(200).json(provincias);
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -45,10 +49,10 @@ async function index(req, res) {
 /**
  * Creates a new product
  */
-function create(req, res) {
+export function create(req: Request, res: Response) {
   const newProvincia = Provincia.build(req.body);
   return newProvincia.save()
-    .then((provincia) => {
+    .then((provincia: ProvinciumModel) => {
       Provincia.findAll({
         where: { codigoProvincia: provincia.codigoProvincia },
         include: [
@@ -56,17 +60,17 @@ function create(req, res) {
             all: true
           }
         ]
-      }).then(prov => {
+      }).then((prov: ProvinciumModel) => {
         res.json(prov);
       })
     })
-    .catch(validationError(res));
+    .catch(validationError(res, 404));
 }
 
 /**
  * Get a single product
  */
-async function show(req, res, next) {
+export async function show(req: Request, res: Response, next: NextFunction) {
   try {
     const codigoProvincia = req.params.codigoProvincia;
     const provincias = await Provincia.findAll({
@@ -80,7 +84,7 @@ async function show(req, res, next) {
       ]
     })
     res.status(200).json(provincias);
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -89,7 +93,7 @@ async function show(req, res, next) {
  * Deletes a user
  * restriction: 'admin'
  */
-async function destroy(req, res) {
+export async function destroy(req: Request, res: Response) {
   try {
     const codigoProvincia = req.params.codigoProvincia;
     await Provincia.destroy({
@@ -98,7 +102,7 @@ async function destroy(req, res) {
       }
     })
     res.status(204).end();
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -106,7 +110,7 @@ async function destroy(req, res) {
 /**
  * Change a users password
  */
-function changePassword(req, res) {
+export function changePassword(req: Request, res: Response) {
   throw Error(`
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
@@ -114,7 +118,7 @@ function changePassword(req, res) {
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
   `);
-  const userId = req.user._id;
+  const userId = req.params.userId;
   const oldPass = String(req.body.oldPassword);
   const newPass = String(req.body.newPassword);
 
@@ -123,14 +127,14 @@ function changePassword(req, res) {
       id: userId,
     },
   })
-    .then(user => {
+    .then((user: any) => {
       if (user.authenticate(oldPass)) {
         user.password = newPass;
         return user.save()
           .then(() => {
             res.status(204).end();
           })
-          .catch(validationError(res));
+          .catch(validationError(res, 404));
       } else {
         return res.status(403).end();
       }

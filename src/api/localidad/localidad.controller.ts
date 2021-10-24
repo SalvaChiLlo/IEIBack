@@ -1,3 +1,7 @@
+import { NextFunction } from 'express';
+import { LocalidadModel } from './../models/biblioteca.models';
+import { Request } from 'express';
+import e, { Response } from 'express';
 'use strict';
 const path = require('path')
 const { Localidad } = require(path.join(__dirname, '../../sqldb'));
@@ -5,27 +9,27 @@ const config = require(path.join(__dirname, '../../config/environment'));
 const jwt = require('jsonwebtoken');
 const db = require(path.join(__dirname, '../../sqldb'))
 
-function validationError(res, statusCode) {
+export function validationError(res: Response, statusCode: number) {
   statusCode = statusCode || 422;
-  return (err) => {
+  return (err: Error) => {
     return res.status(statusCode).json(err);
   };
 }
 
-function handleError(res, statusCode) {
+export function handleError(res: Response, statusCode: number) {
   statusCode = statusCode || 500;
-  return (err) => {
+  return (err: Error) => {
     return res.status(statusCode).send(err);
   };
 }
 
-function handleCatch(error) {
+export function handleCatch(error: Error) {
   console.log('--------------------------------------------------------------------------')
   console.error(error)
   process.exit(1)
 }
 
-async function index(req, res) {
+export async function index(req: Request, res: Response) {
   try {
     console.log(req.query, 'PARAMS')
     const query = req.query;
@@ -39,7 +43,7 @@ async function index(req, res) {
     })
 
     res.status(200).json(localidades);
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -47,10 +51,10 @@ async function index(req, res) {
 /**
  * Creates a new product
  */
-function create(req, res) {
+export function create(req: Request, res: Response) {
   const newLocalidad = Localidad.build(req.body);
   return newLocalidad.save()
-    .then((localidad) => {
+    .then((localidad: LocalidadModel) => {
       Localidad.findAll({
         where: { codigoLocalidad: localidad.codigoLocalidad },
         include: [
@@ -58,17 +62,17 @@ function create(req, res) {
             model: db.Provincia
           }
         ]
-      }).then(local => {
+      }).then((local: LocalidadModel) => {
         res.json(local);
       })
     })
-    .catch(validationError(res));
+    .catch(validationError(res, 404));
 }
 
 /**
  * Get a single product
  */
-async function show(req, res, next) {
+export async function show(req: Request, res: Response, next: NextFunction) {
   try {
     const codigoLocalidad = req.params.codigoLocalidad;
     const bibliotecas = await Localidad.findAll({
@@ -82,7 +86,7 @@ async function show(req, res, next) {
       ]
     })
     res.status(200).json(bibliotecas);
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -91,7 +95,7 @@ async function show(req, res, next) {
  * Deletes a user
  * restriction: 'admin'
  */
-async function destroy(req, res) {
+export async function destroy(req: Request, res: Response) {
   try {
     const codigoLocalidad = req.params.codigoLocalidad;
     await Localidad.destroy({
@@ -100,7 +104,7 @@ async function destroy(req, res) {
       }
     })
     res.status(204).end();
-  } catch (error) {
+  } catch (error: any) {
     handleCatch(error)
   }
 }
@@ -108,7 +112,7 @@ async function destroy(req, res) {
 /**
  * Change a users password
  */
-function changePassword(req, res) {
+export function changePassword(req: Request, res: Response) {
   throw Error(`
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
@@ -116,7 +120,7 @@ function changePassword(req, res) {
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
   `);
-  const userId = req.user._id;
+  const userId = req.params.userId;
   const oldPass = String(req.body.oldPassword);
   const newPass = String(req.body.newPassword);
 
@@ -125,24 +129,16 @@ function changePassword(req, res) {
       id: userId,
     },
   })
-    .then(user => {
+    .then((user: any) => {
       if (user.authenticate(oldPass)) {
         user.password = newPass;
         return user.save()
           .then(() => {
             res.status(204).end();
           })
-          .catch(validationError(res));
+          .catch(validationError(res, 404));
       } else {
         return res.status(403).end();
       }
     });
 }
-
-module.exports = {
-  index,
-  show,
-  create,
-  destroy,
-  changePassword,
-};

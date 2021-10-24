@@ -1,10 +1,8 @@
 'use strict';
+import { Router } from 'express';
+import * as Biblioteca from './biblioteca.controller';
 
-const { Router } = require('express');
-const path = require('path');
-const Biblioteca = require(path.join(__dirname, './biblioteca.controller'));
-
-const router = new Router();
+const router = Router();
 
 router.get('/', Biblioteca.index);
 router.post('/', Biblioteca.create);

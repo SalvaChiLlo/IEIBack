@@ -3,15 +3,15 @@ const express = require('express');
 const expressConfig = require('./config/express');
 const http = require('http');
 const fs = require('fs')
-const path = require('path');
+import path from "path";
 const routeConfig = require(path.join(__dirname, './routes'));
 const sqldb = require(path.join(__dirname, './sqldb'));
-const cat = require(path.join(__dirname, '../IEICAT'));
-const val = require(path.join(__dirname, '../IEICV'));
+import { convertXMLToJSON } from '../../IEICAT/src/index';
+import { convertCSVToJSON } from '../../IEICV/src/index';
 
 async function parseData() {
-  fs.writeFileSync('./CAT.json', JSON.stringify(cat.convertXMLToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.xml')).toString())))
-  fs.writeFileSync('./VAL.json', JSON.stringify(await val.convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
+  fs.writeFileSync('./CAT.json', JSON.stringify(convertXMLToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.xml')).toString())))
+  fs.writeFileSync('./VAL.json', JSON.stringify(await convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
 }
 
 parseData()
@@ -30,7 +30,7 @@ function startServer() {
 
 sqldb.sequelize.sync()
   .then(startServer)
-  .catch((err) => {
+  .catch((err: Error) => {
     console.error(`Server failed to start due to error: ${err}`);
   });
 
