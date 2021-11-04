@@ -1,5 +1,5 @@
 import { NextFunction } from 'express';
-import { LocalidadModel } from './../models/biblioteca.models';
+import { LocalidadModel } from '../../models/biblioteca.models';
 import { Request } from 'express';
 import e, { Response } from 'express';
 'use strict';

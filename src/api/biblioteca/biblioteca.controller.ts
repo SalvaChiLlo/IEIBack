@@ -1,4 +1,4 @@
-import { BibliotecaModel } from './../models/biblioteca.models';
+import { BibliotecaModel } from '../../models/biblioteca.models';
 'use strict';
 
 import { NextFunction, Request, Response } from "express";

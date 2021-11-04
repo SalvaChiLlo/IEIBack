@@ -1,7 +1,7 @@
 'use strict';
 
 import { NextFunction, Request, Response } from "express";
-import { ProvinciumModel } from "../models/biblioteca.models";
+import { ProvinciumModel } from "../../models/biblioteca.models";
 
 const path = require('path')
 const { Provincia } = require(path.join(__dirname, '../../sqldb'));
