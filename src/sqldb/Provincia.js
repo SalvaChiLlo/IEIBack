@@ -20,11 +20,11 @@ module.exports = (sequelize, DataTypes) => {
     codigoProvincia: {
       type: DataTypes.TEXT,
       allowNull: false,
-      primaryKey: true,
     },
     nombreProvincia: {
+      primaryKey: true,
+      allowNull: false,
       type: DataTypes.TEXT,
-      default: ''
     }
   }, {
     sequelize,

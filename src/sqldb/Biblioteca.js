@@ -17,15 +17,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Biblioteca.init({
-    id: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-      primaryKey: true,
-      autoIncrement: true,
-    },
+    // id: {
+    //   type: DataTypes.INTEGER,
+    //   allowNull: false,
+    //   autoIncrement: true,
+    //   unique: true,
+    // },
     nombre: {
+      primaryKey: true,
+      allowNull: false,
       type: DataTypes.TEXT,
-      default: ''
     },
     tipo: {
       type: DataTypes.TEXT,
@@ -40,12 +41,12 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: ''
     },
     longitud: {
-      type: DataTypes.TEXT,
-      defaultValue: ''
+      type: DataTypes.DOUBLE,
+      defaultValue: 0.0
     },
     latitud: {
-      type: DataTypes.TEXT,
-      defaultValue: ''
+      type: DataTypes.DOUBLE,
+      defaultValue: 0.0
     },
     telefono: {
       type: DataTypes.TEXT,

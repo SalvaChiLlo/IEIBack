@@ -24,9 +24,10 @@ module.exports = (sequelize, DataTypes) => {
     codigoLocalidad: {
       type: DataTypes.TEXT,
       allowNull: false,
-      primaryKey: true,
     },
     nombreLocalidad: {
+      primaryKey: true,
+      allowNull: false,
       type: DataTypes.TEXT,
       default: ''
     }

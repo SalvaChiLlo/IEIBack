@@ -14,7 +14,7 @@ async function parseData() {
   fs.writeFileSync('./VAL.json', JSON.stringify(await convertCSVToJSON(fs.readFileSync(path.join(__dirname, './biblioteques.csv')).toString())))
 }
 
-parseData()
+// parseData()
 
 // Setup server
 const app = express();
@@ -28,7 +28,7 @@ function startServer() {
   });
 }
 
-sqldb.sequelize.sync()
+sqldb.sequelize.sync({ force: true })
   .then(startServer)
   .catch((err: Error) => {
     console.error(`Server failed to start due to error: ${err}`);
