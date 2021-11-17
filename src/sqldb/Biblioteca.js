@@ -17,15 +17,16 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Biblioteca.init({
-    // id: {
-    //   type: DataTypes.INTEGER,
-    //   allowNull: false,
-    //   autoIncrement: true,
-    //   unique: true,
-    // },
-    nombre: {
+    id: {
+      type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
+      autoIncrement: true,
+      unique: true,
+    },
+    nombre: {
+      // primaryKey: true,
+      // allowNull: false,
       type: DataTypes.TEXT,
     },
     tipo: {
