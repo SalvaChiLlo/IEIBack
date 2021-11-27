@@ -19,14 +19,13 @@ module.exports = (sequelize, DataTypes) => {
   Biblioteca.init({
     id: {
       type: DataTypes.INTEGER,
-      primaryKey: true,
       allowNull: false,
       autoIncrement: true,
-      unique: true,
     },
     nombre: {
-      // primaryKey: true,
-      // allowNull: false,
+      primaryKey: true,
+      allowNull: false,
+      unique: true,
       type: DataTypes.TEXT,
     },
     tipo: {
