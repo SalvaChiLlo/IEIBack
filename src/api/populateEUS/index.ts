@@ -4,6 +4,6 @@ import * as Biblioteca from './populateEUS.controller';
 
 const router = Router();
 
-router.post('/', Biblioteca.insert);
+router.get('/', Biblioteca.insert);
 
 module.exports = router;

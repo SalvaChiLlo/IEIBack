@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import path from "path";
+import fs from 'fs'
 import { extractDataEUS } from '../../../../ExtractorEUS/src'
 
 export function validationError(res: Response, statusCode: any) {
@@ -18,7 +20,7 @@ export function handleCatch(error: any, res: Response) {
 
 export async function insert(req: Request, res: Response) {
   try {
-    await extractDataEUS(req.body.bibliotecas)
+    await extractDataEUS(JSON.parse(fs.readFileSync(path.join(__dirname, './EUS.json')).toString()))
     res.status(200).json({
       message: `Se han añadido o actualizado ${req.body.bibliotecas.length} bibliotecas!!`
     })

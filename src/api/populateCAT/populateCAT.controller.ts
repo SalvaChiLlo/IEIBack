@@ -1,6 +1,8 @@
 import { Request, Response } from "express";
 import { extractDataCAT } from '../../../../ExtractorCAT/src'
 import { convertXMLToJSON } from "../../../../IEICAT/src";
+import fs from 'fs';
+import path from "path";
 
 export function validationError(res: Response, statusCode: any) {
   statusCode = statusCode || 422;
@@ -19,7 +21,7 @@ export function handleCatch(error: any, res: Response) {
 
 export async function insert(req: Request, res: Response) {
   try {
-    const bibliotecas = convertXMLToJSON(req.body.bibliotecas)
+    const bibliotecas = convertXMLToJSON(fs.readFileSync(path.join(__dirname, './CAT.xml')).toString())
     await extractDataCAT(bibliotecas)
     res.status(200).json({
       message: `Se han añadido o actualizado ${bibliotecas.length} bibliotecas!!`
