@@ -23,13 +23,16 @@ export function handleCatch(error: any, res: Response) {
 export async function insert(req: Request, res: Response) {
   try {
     const beforeBib = await Biblioteca.count();
+    const beforeLocalidad = await Localidad.count();
+    const beforeProvincia = await Provincia.count();
     const bibliotecas = await convertCSVToJSON(fs.readFileSync(path.join(__dirname, './CV.csv')).toString())
-    await extractDataCV(bibliotecas)
+    const { numLocalidades, numProvincias } = await extractDataCV(bibliotecas)
     const afterBib = await Biblioteca.count();
-    console.log(afterBib, 'afterBib')
-    res.status(200).json({
-      message: `${afterBib - beforeBib} bibliotecas Valencianas han sido añadidas.\n${afterBib - beforeBib === 0 ? bibliotecas.length : 0} bibliotecas Valencianas han sido actualizadas.`
+    const afterLocalidad = await Localidad.count();
+    const afterProvincia = await Provincia.count();
 
+    res.status(200).json({
+      message: `|--------------------------------|\n|-COMUNIDAD VALENCIANA-|\n|--------------------------------|\n| ${afterBib - beforeBib} bibliotecas han sido añadidas.\n| ${afterBib - beforeBib === 0 ? bibliotecas.length : 0} bibliotecas han sido actualizadas.\n| ${afterLocalidad - beforeLocalidad} localidades han sido añadidas.\n| ${afterBib - beforeBib === 0 ? numLocalidades : 0} localidades han sido actualizadas.\n| ${afterProvincia - beforeProvincia} provincias han sido añadidas.\n| ${afterProvincia - beforeProvincia === 0 ? numProvincias : 0} provincias han sido actualizadas.`
     })
   } catch (error) {
     handleCatch(error, res)
