@@ -32,13 +32,7 @@ export function handleCatch(error: Error) {
 export async function index(req: Request, res: Response) {
   try {
     let provincias = [];
-    provincias = await Provincia.findAll({
-      include: [
-        {
-          all: true
-        }
-      ]
-    })
+    provincias = await Provincia.findAll()
 
     res.status(200).json(provincias);
   } catch (error: any) {
@@ -54,12 +48,7 @@ export function create(req: Request, res: Response) {
   return newProvincia.save()
     .then((provincia: ProvinciumModel) => {
       Provincia.findAll({
-        where: { codigoProvincia: provincia.codigoProvincia },
-        include: [
-          {
-            all: true
-          }
-        ]
+        where: { codigoProvincia: provincia.codigoProvincia }
       }).then((prov: ProvinciumModel) => {
         res.json(prov);
       })

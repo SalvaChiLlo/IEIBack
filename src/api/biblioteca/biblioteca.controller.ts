@@ -6,6 +6,8 @@ import { NextFunction, Request, Response } from "express";
 const path = require('path');
 const { Biblioteca } = require(path.join(__dirname, '../../sqldb'));
 const db = require(path.join(__dirname, '../../sqldb'))
+const { QueryTypes } = require('sequelize');
+
 
 export function validationError(res: Response, statusCode: any) {
   statusCode = statusCode || 422;
@@ -20,53 +22,85 @@ export function handleCatch(error: any) {
   process.exit(1)
 }
 
+/**
+ * Uso del método
+ * 
+ * http://localhost:9000/api/bibliotecas?nombreLocalidad=______&codigoPostal=______&nombreProvincia=______&tipo=______
+ * 
+ * los guiones bajos deben de ser reemplazados por lo que queremos buscar
+ * si no queremos filtrar por algunos de los campos simplemente no le pasamos nada
+ * 
+ * @param req 
+ * @param res 
+ */
 export async function index(req: Request, res: Response) {
+  const query = req.query
   try {
-    console.log(req.query, 'PARAMS')
-    const query = req.query;
-    let bibliotecas = [];
-    if (query.codigoLocalidad && query.codigoProvincia || query.codigoLocalidad) {
-      bibliotecas = await Biblioteca.findAll({
-        where: {
-          LocalidadCodigoLocalidad: query.codigoLocalidad
-        },
-        include: [
-          {
-            model: db.Localidad,
-            include: {
-              model: db.Provincia
-            }
-          }
-        ]
-      })
-    } else if (query.codigoProvincia) {
-      bibliotecas = await Biblioteca.findAll({
-        include: [
-          {
-            model: db.Localidad,
-            include: {
-              model: db.Provincia
-            }
-          }
-        ]
-      })
-
-      bibliotecas = bibliotecas
-        .filter((biblioteca: BibliotecaModel) => biblioteca.Localidad?.Provincium.codigoProvincia === query.codigoProvincia)
-    } else {
-      bibliotecas = await Biblioteca.findAll({
-        include: [
-          {
-            model: db.Localidad,
-            include: {
-              model: db.Provincia
-            }
-          }
-        ]
-      })
-    }
+    const bibliotecas = await db.sequelize.query(`
+select b.* from "Biblioteca" b
+join "Localidad" l on b."LocalidadNombreLocalidad" = l."nombreLocalidad" 
+join "Provincia" p on l."ProvinciumNombreProvincia" = p."nombreProvincia" 
+where 
+l."nombreLocalidad" = ${query.nombreLocalidad && query.nombreLocalidad !== '' ? `'${query.nombreLocalidad}'` : 'l."nombreLocalidad"'}
+and
+b."codigoPostal" = ${query.codigoPostal && query.codigoPostal !== '' ? `'${query.codigoPostal}'` : 'b."codigoPostal"'}
+and
+p."nombreProvincia" = ${query.nombreProvincia && query.nombreProvincia !== '' ? `'${query.nombreProvincia}'` : 'p."nombreProvincia"'}
+and
+b."tipo" = ${query.tipo && query.tipo !== '' ? `'${query.tipo}'` : 'b."tipo"'}
+`, {
+      model: Biblioteca,
+      mapToModel: true
+    })
 
     res.status(200).json(bibliotecas);
+  } catch (error) {
+    handleCatch(error)
+  }
+}
+
+/**
+ * Método para obtener todas las localidades y códigos postales disponibles
+ * USO:
+ * http://localhost:9000/api/bibliotecas/cp?nombreProvincia=________
+ * @param req 
+ * @param res 
+ */
+export async function indexPostalCodes(req: Request, res: Response) {
+  const query = req.query
+  try {
+    const cp = await db.sequelize.query(`
+select b."codigoPostal", b."LocalidadNombreLocalidad" from "Biblioteca" b
+join "Localidad" l on b."LocalidadNombreLocalidad" = l."nombreLocalidad" 
+join "Provincia" p on l."ProvinciumNombreProvincia" = p."nombreProvincia"
+where
+p."nombreProvincia" = ${query.nombreProvincia && query.nombreProvincia !== '' ? `'${query.nombreProvincia}'` : 'p."nombreProvincia"'}
+`, {
+      type: QueryTypes.SELECT
+    })
+
+    res.status(200).json(cp);
+  } catch (error) {
+    handleCatch(error)
+  }
+}
+
+/**
+ * Método para obtener todos los tipos de bibliotecas
+ * USO:
+ * http://localhost:9000/api/bibliotecas/tipos
+ * @param req 
+ * @param res 
+ */
+export async function indexTipos(req: Request, res: Response) {
+  try {
+    const cp = await db.sequelize.query(`
+select distinct b."tipo" from "Biblioteca" b
+`, {
+      type: QueryTypes.SELECT
+    })
+
+    res.status(200).json(cp);
   } catch (error) {
     handleCatch(error)
   }
@@ -99,7 +133,7 @@ export function create(req: Request, res: Response) {
 /**
  * Get a single product
  */
-export async function show(req: Request, res: Response, next: NextFunction) {
+export async function show(req: Request, res: Response) {
   try {
     const id = req.params.id;
     const bibliotecas = await Biblioteca.findAll({

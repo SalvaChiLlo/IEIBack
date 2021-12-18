@@ -34,13 +34,7 @@ export async function index(req: Request, res: Response) {
     console.log(req.query, 'PARAMS')
     const query = req.query;
     let localidades = [];
-    localidades = await Localidad.findAll({
-      include: [
-        {
-          model: db.Provincia
-        }
-      ]
-    })
+    localidades = await Localidad.findAll()
 
     res.status(200).json(localidades);
   } catch (error: any) {
