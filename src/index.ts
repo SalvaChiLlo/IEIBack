@@ -29,7 +29,7 @@ function startServer() {
 }
 
 sqldb.sequelize.sync({})
-  // sqldb.sequelize.sync({ alter: true })
+  // sqldb.sequelize.sync({ force: true })
   .then(startServer)
   .catch((err: Error) => {
     console.error(`Server failed to start due to error: ${err}`);

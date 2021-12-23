@@ -60,6 +60,10 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.TEXT,
       defaultValue: ''
     },
+    web: {
+      type: DataTypes.TEXT,
+      defaultValue: ''
+    },
   }, {
     sequelize,
     modelName: 'Biblioteca',

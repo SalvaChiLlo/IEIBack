@@ -11,6 +11,7 @@ export interface BibliotecaModel {
   telefono: string;
   email: string;
   descripcion: string;
+  web: string;
   createdAt?: string;
   updatedAt?: string;
   LocalidadNombreLocalidad: string;
