@@ -8,7 +8,7 @@ const router = Router();
 
 router.get('/', Localidad.index);
 router.post('/', Localidad.create);
-router.get('/:codigoLocalidad', Localidad.show);
+router.get('/:nombreLocalidad', Localidad.show);
 router.delete('/:codigoLocalidad', Localidad.destroy);
 
 module.exports = router;

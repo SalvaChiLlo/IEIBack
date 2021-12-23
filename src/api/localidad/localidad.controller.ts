@@ -68,16 +68,11 @@ export function create(req: Request, res: Response) {
  */
 export async function show(req: Request, res: Response, next: NextFunction) {
   try {
-    const codigoLocalidad = req.params.codigoLocalidad;
+    const nombreLocalidad = req.params.nombreLocalidad;
     const bibliotecas = await Localidad.findAll({
       where: {
-        codigoLocalidad
-      },
-      include: [
-        {
-          model: db.Provincia
-        }
-      ]
+        nombreLocalidad
+      }
     })
     res.status(200).json(bibliotecas);
   } catch (error: any) {

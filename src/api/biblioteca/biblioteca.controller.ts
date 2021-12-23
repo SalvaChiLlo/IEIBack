@@ -48,6 +48,7 @@ and
 p."nombreProvincia" = ${query.nombreProvincia && query.nombreProvincia !== '' ? `'${query.nombreProvincia}'` : 'p."nombreProvincia"'}
 and
 b."tipo" = ${query.tipo && query.tipo !== '' ? `'${query.tipo}'` : 'b."tipo"'}
+order by "nombre"
 `, {
       model: Biblioteca,
       mapToModel: true
