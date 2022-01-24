@@ -12,12 +12,12 @@ module.exports = {
     database: process.env.PRODUCTION_DATABASE,
     host: process.env.PRODUCTION_DB_HOST,
     dialect: process.env.PRODUCTION_DIALECT,
-    ssl: true,
-    dialectOptions: {
-      ssl: {
-        require: true,
-        rejectUnauthorized: false,
-      },
-    },
+    // ssl: false,
+    // dialectOptions: {
+    //   ssl: {
+    //     require: true,
+    //     rejectUnauthorized: false,
+    //   },
+    // },
   },
 };
