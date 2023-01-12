@@ -19,12 +19,12 @@ export function handleCatch(error: any, res: Response) {
   }).status(500)
 }
 
-export async function insert(req: Request, res: Response) {
+export async function insert(req: any, res: Response) {
   try {
     const beforeBib = await Biblioteca.count();
     const beforeLocalidad = await Localidad.count();
     const beforeProvincia = await Provincia.count();
-    const bibliotecas = JSON.parse(fs.readFileSync(path.join(__dirname, './EUS.json')).toString());
+    const bibliotecas = JSON.parse(req.file.buffer.toString());
     const { numLocalidades, numProvincias } = await extractDataEUS(bibliotecas)
     const afterBib = await Biblioteca.count();
     const afterLocalidad = await Localidad.count();

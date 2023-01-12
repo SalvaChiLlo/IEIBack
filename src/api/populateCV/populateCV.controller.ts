@@ -20,12 +20,12 @@ export function handleCatch(error: any, res: Response) {
   }).status(500)
 }
 
-export async function insert(req: Request, res: Response) {
+export async function insert(req: any, res: Response) {
   try {
     const beforeBib = await Biblioteca.count();
     const beforeLocalidad = await Localidad.count();
     const beforeProvincia = await Provincia.count();
-    const bibliotecas = await convertCSVToJSON(fs.readFileSync(path.join(__dirname, './CV.csv')).toString())
+    const bibliotecas = await convertCSVToJSON(req.file.buffer.toString())
     const { numLocalidades, numProvincias } = await extractDataCV(bibliotecas)
     const afterBib = await Biblioteca.count();
     const afterLocalidad = await Localidad.count();

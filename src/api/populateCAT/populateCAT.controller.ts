@@ -20,12 +20,12 @@ export function handleCatch(error: any, res: Response) {
   }).status(500)
 }
 
-export async function insert(req: Request, res: Response) {
+export async function insert(req: any, res: Response) {
   try {
     const beforeBib = await Biblioteca.count();
     const beforeLocalidad = await Localidad.count();
     const beforeProvincia = await Provincia.count();
-    const bibliotecas = convertXMLToJSON(fs.readFileSync(path.join(__dirname, './CAT.xml')).toString())
+    const bibliotecas = convertXMLToJSON(req.file.buffer.toString())
     const { numLocalidades, numProvincias } = await extractDataCAT(bibliotecas)
     const afterBib = await Biblioteca.count();
     const afterLocalidad = await Localidad.count();
