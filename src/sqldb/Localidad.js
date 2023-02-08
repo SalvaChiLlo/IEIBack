@@ -22,13 +22,13 @@ module.exports = (sequelize, DataTypes) => {
   };
   Localidad.init({
     codigoLocalidad: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       allowNull: false,
     },
     nombreLocalidad: {
       primaryKey: true,
       allowNull: false,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
       default: ''
     }
   }, {

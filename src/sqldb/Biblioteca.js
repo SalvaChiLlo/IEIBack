@@ -21,23 +21,24 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.INTEGER,
       allowNull: false,
       autoIncrement: true,
+      primaryKey: true,
     },
     nombre: {
       primaryKey: true,
       allowNull: false,
       unique: true,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
     },
     tipo: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     direccion: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     codigoPostal: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     longitud: {
@@ -49,19 +50,19 @@ module.exports = (sequelize, DataTypes) => {
       defaultValue: 0.0
     },
     telefono: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     email: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     descripcion: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
     web: {
-      type: DataTypes.TEXT,
+      type: DataTypes.TEXT('long'),
       defaultValue: ''
     },
   }, {

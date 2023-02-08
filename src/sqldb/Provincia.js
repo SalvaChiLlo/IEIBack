@@ -18,13 +18,13 @@ module.exports = (sequelize, DataTypes) => {
   };
   Provincia.init({
     codigoProvincia: {
-      type: DataTypes.TEXT,
-      allowNull: false,
+      type: DataTypes.TEXT('long'),
+      allowNull: false
     },
     nombreProvincia: {
       primaryKey: true,
       allowNull: false,
-      type: DataTypes.TEXT,
+      type: DataTypes.STRING(255),
     }
   }, {
     sequelize,
