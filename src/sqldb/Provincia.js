@@ -1,7 +1,7 @@
-'use strict';
 const {
   Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Provincia extends Model {
     /**
@@ -12,20 +12,20 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Provincia.hasMany(models.Localidad, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      })
+        onUpdate: 'CASCADE',
+      });
     }
-  };
+  }
   Provincia.init({
     codigoProvincia: {
       type: DataTypes.TEXT('long'),
-      allowNull: false
+      allowNull: false,
     },
     nombreProvincia: {
       primaryKey: true,
       allowNull: false,
       type: DataTypes.STRING(255),
-    }
+    },
   }, {
     sequelize,
     modelName: 'Provincia',

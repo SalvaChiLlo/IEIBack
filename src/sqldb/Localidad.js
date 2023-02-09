@@ -1,7 +1,7 @@
-'use strict';
 const {
   Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Localidad extends Model {
     /**
@@ -12,14 +12,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Localidad.hasMany(models.Biblioteca, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      })
+        onUpdate: 'CASCADE',
+      });
       Localidad.belongsTo(models.Provincia, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      })
+        onUpdate: 'CASCADE',
+      });
     }
-  };
+  }
   Localidad.init({
     codigoLocalidad: {
       type: DataTypes.TEXT('long'),
@@ -29,8 +29,8 @@ module.exports = (sequelize, DataTypes) => {
       primaryKey: true,
       allowNull: false,
       type: DataTypes.STRING(255),
-      default: ''
-    }
+      default: '',
+    },
   }, {
     sequelize,
     modelName: 'Localidad',

@@ -1,23 +1,22 @@
-import { Request, Response } from "express";
-import { extractDataCAT } from '../../../../ExtractorCAT/src'
-import { convertXMLToJSON } from "../../../../IEICAT/src";
-const { Biblioteca, Localidad, Provincia } = require('../../sqldb');
+import { Request, Response } from 'express';
 import fs from 'fs';
-import path from "path";
+import path from 'path';
+import { extractDataCAT } from '../../../../ExtractorCAT/src';
+import { convertXMLToJSON } from '../../../../IEICAT/src';
+
+const { Biblioteca, Localidad, Provincia } = require('../../sqldb');
 
 export function validationError(res: Response, statusCode: any) {
   statusCode = statusCode || 422;
-  return (err: any) => {
-    return res.status(statusCode).json(err);
-  };
+  return (err: any) => res.status(statusCode).json(err);
 }
 
 export function handleCatch(error: any, res: Response) {
-  console.log('--------------------------------------------------------------------------')
-  console.error(error)
+  console.log('--------------------------------------------------------------------------');
+  console.error(error);
   res.json({
-    message: 'Se ha producido un error durante la carga. CAT'
-  }).status(500)
+    message: 'Se ha producido un error durante la carga. CAT',
+  }).status(500);
 }
 
 export async function insert(req: any, res: Response) {
@@ -25,16 +24,16 @@ export async function insert(req: any, res: Response) {
     const beforeBib = await Biblioteca.count();
     const beforeLocalidad = await Localidad.count();
     const beforeProvincia = await Provincia.count();
-    const bibliotecas = convertXMLToJSON(req.file.buffer.toString())
-    const { numLocalidades, numProvincias } = await extractDataCAT(bibliotecas)
+    const bibliotecas = convertXMLToJSON(req.file.buffer.toString());
+    const { numLocalidades, numProvincias } = await extractDataCAT(bibliotecas);
     const afterBib = await Biblioteca.count();
     const afterLocalidad = await Localidad.count();
     const afterProvincia = await Provincia.count();
 
     res.status(200).json({
-      message: `|--------------|\n|-CATALUÑA-|\n|--------------|\n| ${afterBib - beforeBib} bibliotecas han sido añadidas.\n| ${afterBib - beforeBib === 0 ? bibliotecas.length : 0} bibliotecas han sido actualizadas.\n| ${afterLocalidad - beforeLocalidad} localidades han sido añadidas.\n| ${afterBib - beforeBib === 0 ? numLocalidades : 0} localidades han sido actualizadas.\n| ${afterProvincia - beforeProvincia} provincias han sido añadidas.\n| ${afterProvincia - beforeProvincia === 0 ? numProvincias : 0} provincias han sido actualizadas.`
-    })
+      message: `|--------------|\n|-CATALUÑA-|\n|--------------|\n| ${afterBib - beforeBib} bibliotecas han sido añadidas.\n| ${afterBib - beforeBib === 0 ? bibliotecas.length : 0} bibliotecas han sido actualizadas.\n| ${afterLocalidad - beforeLocalidad} localidades han sido añadidas.\n| ${afterBib - beforeBib === 0 ? numLocalidades : 0} localidades han sido actualizadas.\n| ${afterProvincia - beforeProvincia} provincias han sido añadidas.\n| ${afterProvincia - beforeProvincia === 0 ? numProvincias : 0} provincias han sido actualizadas.`,
+    });
   } catch (error) {
-    handleCatch(error, res)
+    handleCatch(error, res);
   }
 }

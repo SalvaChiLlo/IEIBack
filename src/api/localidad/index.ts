@@ -1,8 +1,5 @@
-'use strict';
-
 import { Router } from 'express';
 import * as Localidad from './localidad.controller';
-
 
 const router = Router();
 

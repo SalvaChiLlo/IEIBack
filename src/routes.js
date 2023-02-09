@@ -1,14 +1,13 @@
 // // import Endpoints
+const path = require('path');
 const biblioteca = require('./api/biblioteca');
 const localidad = require('./api/localidad');
 const provincia = require('./api/provincia');
 const populateEUS = require('./api/populateEUS');
 const populateCAT = require('./api/populateCAT');
 const populateCV = require('./api/populateCV');
-const path = require('path');
-const db = require(path.join(__dirname, './sqldb'))
 
-
+const db = require(path.join(__dirname, './sqldb'));
 
 module.exports = (app) => {
   app.use('/api/bibliotecas', biblioteca);
@@ -26,18 +25,18 @@ module.exports = (app) => {
     try {
       console.log('BORRANDO');
       await db.sequelize.query(`
-      delete from "Biblioteca" b; delete from "Localidad" l; delete from "Provincia" p;
-      `)
+      delete from Biblioteca b; delete from Localidad l; delete from Provincia p;
+      `);
 
       res.status(200).send('');
     } catch (error) {
-      handleCatch(error)
+      handleCatch(error);
     }
   });
 
   function handleCatch(error) {
-    console.log('--------------------------------------------------------------------------')
-    console.error(error)
-    process.exit(1)
+    console.log('--------------------------------------------------------------------------');
+    console.error(error);
+    process.exit(1);
   }
 };

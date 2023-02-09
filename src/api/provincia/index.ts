@@ -1,7 +1,5 @@
-'use strict';
-
 import { Router } from 'express';
-import * as Provincia from './provincia.controller'
+import * as Provincia from './provincia.controller';
 
 const router = Router();
 

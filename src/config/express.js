@@ -2,7 +2,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const compression = require('compression');
 const methodOverride = require('method-override');
-const express = require('express')
+const express = require('express');
 
 module.exports = (app) => {
   app.use(compression());

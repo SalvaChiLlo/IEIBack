@@ -1,7 +1,7 @@
-'use strict';
 const {
   Model,
 } = require('sequelize');
+
 module.exports = (sequelize, DataTypes) => {
   class Biblioteca extends Model {
     /**
@@ -12,10 +12,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Biblioteca.belongsTo(models.Localidad, {
         onDelete: 'CASCADE',
-        onUpdate: 'CASCADE'
-      })
+        onUpdate: 'CASCADE',
+      });
     }
-  };
+  }
   Biblioteca.init({
     id: {
       type: DataTypes.INTEGER,
@@ -31,39 +31,39 @@ module.exports = (sequelize, DataTypes) => {
     },
     tipo: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     direccion: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     codigoPostal: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     longitud: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0.0
+      defaultValue: 0.0,
     },
     latitud: {
       type: DataTypes.DOUBLE,
-      defaultValue: 0.0
+      defaultValue: 0.0,
     },
     telefono: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     email: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     descripcion: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
     web: {
       type: DataTypes.TEXT('long'),
-      defaultValue: ''
+      defaultValue: '',
     },
   }, {
     sequelize,

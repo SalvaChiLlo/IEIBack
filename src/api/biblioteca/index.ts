@@ -1,4 +1,3 @@
-'use strict';
 import { Router } from 'express';
 import * as Biblioteca from './biblioteca.controller';
 

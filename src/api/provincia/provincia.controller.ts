@@ -1,42 +1,38 @@
-'use strict';
+import { NextFunction, Request, Response } from 'express';
+import { ProvinciumModel } from '../../models/biblioteca.models';
 
-import { NextFunction, Request, Response } from "express";
-import { ProvinciumModel } from "../../models/biblioteca.models";
+const path = require('path');
 
-const path = require('path')
 const { Provincia } = require(path.join(__dirname, '../../sqldb'));
 const config = require(path.join(__dirname, '../../config/environment'));
 const jwt = require('jsonwebtoken');
+
 const db = require(path.join(__dirname, '../../sqldb'));
 
 export function validationError(res: Response, statusCode: number) {
   statusCode = statusCode || 422;
-  return (err: Error) => {
-    return res.status(statusCode).json(err);
-  };
+  return (err: Error) => res.status(statusCode).json(err);
 }
 
 export function handleError(res: Response, statusCode: number) {
   statusCode = statusCode || 500;
-  return (err: Error) => {
-    return res.status(statusCode).send(err);
-  };
+  return (err: Error) => res.status(statusCode).send(err);
 }
 
 export function handleCatch(error: Error) {
-  console.log('--------------------------------------------------------------------------')
-  console.error(error)
-  process.exit(1)
+  console.log('--------------------------------------------------------------------------');
+  console.error(error);
+  process.exit(1);
 }
 
 export async function index(req: Request, res: Response) {
   try {
     let provincias = [];
-    provincias = await Provincia.findAll()
+    provincias = await Provincia.findAll();
 
     res.status(200).json(provincias);
   } catch (error: any) {
-    handleCatch(error)
+    handleCatch(error);
   }
 }
 
@@ -48,10 +44,10 @@ export function create(req: Request, res: Response) {
   return newProvincia.save()
     .then((provincia: ProvinciumModel) => {
       Provincia.findAll({
-        where: { codigoProvincia: provincia.codigoProvincia }
+        where: { codigoProvincia: provincia.codigoProvincia },
       }).then((prov: ProvinciumModel) => {
         res.json(prov);
-      })
+      });
     })
     .catch(validationError(res, 404));
 }
@@ -61,20 +57,20 @@ export function create(req: Request, res: Response) {
  */
 export async function show(req: Request, res: Response, next: NextFunction) {
   try {
-    const codigoProvincia = req.params.codigoProvincia;
+    const { codigoProvincia } = req.params;
     const provincias = await Provincia.findAll({
       where: {
-        codigoProvincia
+        codigoProvincia,
       },
       include: [
         {
-          all: true
-        }
-      ]
-    })
+          all: true,
+        },
+      ],
+    });
     res.status(200).json(provincias);
   } catch (error: any) {
-    handleCatch(error)
+    handleCatch(error);
   }
 }
 
@@ -84,15 +80,15 @@ export async function show(req: Request, res: Response, next: NextFunction) {
  */
 export async function destroy(req: Request, res: Response) {
   try {
-    const codigoProvincia = req.params.codigoProvincia;
+    const { codigoProvincia } = req.params;
     await Provincia.destroy({
       where: {
-        codigoProvincia
-      }
-    })
+        codigoProvincia,
+      },
+    });
     res.status(204).end();
   } catch (error: any) {
-    handleCatch(error)
+    handleCatch(error);
   }
 }
 
@@ -107,7 +103,7 @@ export function changePassword(req: Request, res: Response) {
 --------------------------------------------------------------------------------------------
 --------------------------------------------------------------------------------------------
   `);
-  const userId = req.params.userId;
+  const { userId } = req.params;
   const oldPass = String(req.body.oldPassword);
   const newPass = String(req.body.newPassword);
 
@@ -124,9 +120,8 @@ export function changePassword(req: Request, res: Response) {
             res.status(204).end();
           })
           .catch(validationError(res, 404));
-      } else {
-        return res.status(403).end();
       }
+      return res.status(403).end();
     });
 }
 
